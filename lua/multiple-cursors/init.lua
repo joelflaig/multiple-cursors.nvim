@@ -585,6 +585,20 @@ function M.mouse_add_delete_cursor()
   end
 end
 
+-- Add or delete a virtual cursor at the cursor position
+function M.cursor_add_delete_cursor()
+  M.init() -- Initialise if this is the first cursor
+
+  local cur_pos = vim.fn.getcurpos()
+
+  -- Add a virtual cursor to the mouse click position, or delete an existing one
+  virtual_cursors.add_or_delete(cur_pos.line, cur_pos.column)
+
+  if virtual_cursors.get_num_virtual_cursors() == 0 then
+    M.deinit(true) -- Deinitialise if there are no more cursors
+  end
+end
+
 local function get_visual_area_text()
 
   local lnum1, col1, lnum2, col2 = common.get_normalised_visual_area()
@@ -919,6 +933,7 @@ function M.setup(opts)
   vim.api.nvim_create_user_command("MultipleCursorsAddUp", M.add_cursor_up, {})
 
   vim.api.nvim_create_user_command("MultipleCursorsMouseAddDelete", M.mouse_add_delete_cursor, {})
+  vim.api.nvim_create_user_command("MultipleCursorsCursorAddDelete", M.cursor_add_delete_cursor, {})
 
   vim.api.nvim_create_user_command("MultipleCursorsAddMatches", M.add_cursors_to_matches, {})
   vim.api.nvim_create_user_command("MultipleCursorsAddMatchesV", M.add_cursors_to_matches_v, {})
