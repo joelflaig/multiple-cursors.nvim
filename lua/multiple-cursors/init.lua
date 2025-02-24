@@ -589,10 +589,10 @@ end
 function M.cursor_add_delete_cursor()
   M.init() -- Initialise if this is the first cursor
 
-  local cur_pos = vim.fn.getcurpos()
+  local line,col = unpack(vim.api.nvim_win_get_cursor(0))
 
   -- Add a virtual cursor to the mouse click position, or delete an existing one
-  virtual_cursors.add_or_delete(cur_pos.line, cur_pos.column)
+  virtual_cursors.add_or_delete(line, col)
 
   if virtual_cursors.get_num_virtual_cursors() == 0 then
     M.deinit(true) -- Deinitialise if there are no more cursors
